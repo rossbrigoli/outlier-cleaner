@@ -3,7 +3,7 @@ package org.hyphen.ross;
 
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
-import org.hyphen.ross.service.FileSerializer;
+import org.hyphen.ross.service.FileSerializerService;
 import org.hyphen.ross.service.FilterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class Main implements QuarkusApplication {
     private final static Logger LOGGER = LoggerFactory.getLogger("Main");
 
     @Inject
-    FileSerializer serializer;
+    FileSerializerService serializer;
 
     @Inject
     FilterService filterService;

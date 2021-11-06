@@ -2,6 +2,7 @@ package org.hyphen.ross.service;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hyphen.ross.model.PriceRecord;
+import org.hyphen.ross.processors.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public class SimpleFilterService implements FilterService {
     /**
      * The predicate function to use in filtering records.
      * To change the filter logic, replace this with another implementation of the Filter abstract class.
+     * You can do this by marking the unwanted implementation with @Alternative annotation
      */
     @Inject
     Filter filterPredicate;
@@ -30,6 +32,9 @@ public class SimpleFilterService implements FilterService {
      */
     @ConfigProperty(name = "filter.threshold")
     Double filterThreshold;
+
+    @ConfigProperty(name = "filter.dayrange")
+    Integer neighborDaysRange;
 
     /**
      * Applies a filter to the given collection of PriceRecords using a filter predicate.
@@ -42,6 +47,8 @@ public class SimpleFilterService implements FilterService {
 
         filterPredicate.setThreshold(filterThreshold);
         filterPredicate.setDataset(sourceCollection);
+        filterPredicate.setNeighborDaysRange(neighborDaysRange);
+
         return sourceCollection.stream().filter(filterPredicate).collect(Collectors.toList());
     }
 }

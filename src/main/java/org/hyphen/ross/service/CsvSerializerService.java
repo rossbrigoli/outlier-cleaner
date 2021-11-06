@@ -19,7 +19,7 @@ import java.util.List;
  * A basic bespoke CSV file serializer/deserializer
  */
 @ApplicationScoped
-public class CsvSerializer implements FileSerializer {
+public class CsvSerializerService implements FileSerializerService {
     private final static String[] HEADERS = new String[]{"Date", "Price"};
     private final static String DATE_STRING_PATTERN = "dd/MM/yyyy";
 

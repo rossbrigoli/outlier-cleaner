@@ -1,7 +1,7 @@
 package org.hyphen.ross;
 
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.service.Filter;
+import org.hyphen.ross.processors.Filter;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;

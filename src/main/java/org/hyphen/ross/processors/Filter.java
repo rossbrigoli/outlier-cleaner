@@ -1,4 +1,4 @@
-package org.hyphen.ross.service;
+package org.hyphen.ross.processors;
 
 import org.hyphen.ross.model.PriceRecord;
 
@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 public abstract class Filter implements Predicate<PriceRecord> {
     protected Double threshold;
     protected List<PriceRecord> dataset;
+    protected Integer neighborDaysRange;
 
     public void setThreshold(Double threshold) {
         this.threshold = threshold;
@@ -20,5 +21,9 @@ public abstract class Filter implements Predicate<PriceRecord> {
 
     public void setDataset(List<PriceRecord> dataset) {
         this.dataset = dataset;
+    }
+
+    public void setNeighborDaysRange(Integer neighborDaysRange) {
+        this.neighborDaysRange = neighborDaysRange;
     }
 }
