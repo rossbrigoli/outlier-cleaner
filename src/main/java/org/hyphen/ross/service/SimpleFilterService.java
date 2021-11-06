@@ -2,7 +2,7 @@ package org.hyphen.ross.service;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.processors.Filter;
+import org.hyphen.ross.processors.FilterPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +25,16 @@ public class SimpleFilterService implements FilterService {
      * You can do this by marking the unwanted implementation with @Alternative annotation
      */
     @Inject
-    Filter filterPredicate;
+    FilterPredicate filterPredicate;
 
     /**
      * Used as the allowable distance from the baseline price before a record is considered as outlier.
      */
     @ConfigProperty(name = "filter.threshold")
-    Double filterThreshold;
+    Double filterThreshold = 5.0;
 
     @ConfigProperty(name = "filter.dayrange")
-    Integer neighborDaysRange;
+    Integer neighborDaysRange = 15;
 
     /**
      * Applies a filter to the given collection of PriceRecords using a filter predicate.

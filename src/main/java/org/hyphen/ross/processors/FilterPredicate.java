@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * Abstract base class for all Filter implementations
  */
 @ApplicationScoped
-public abstract class Filter implements Predicate<PriceRecord> {
+public abstract class FilterPredicate implements Predicate<PriceRecord> {
     protected Double threshold;
     protected List<PriceRecord> dataset;
     protected Integer neighborDaysRange;

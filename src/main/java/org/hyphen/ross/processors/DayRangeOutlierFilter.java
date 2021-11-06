@@ -1,7 +1,6 @@
 package org.hyphen.ross.processors;
 
 import org.hyphen.ross.model.PriceRecord;
-import org.joda.time.LocalDate;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
  */
 @ApplicationScoped
 @Alternative
-public class DayRangeOutlierFilter extends Filter {
+public class DayRangeOutlierFilter extends FilterPredicate {
 
     /***
      * The main filter predicate function invoked by a Stream filter invocation.

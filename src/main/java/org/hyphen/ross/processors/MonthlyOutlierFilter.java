@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * If the price of a data point is farther away from the baseline than the given threshold, then the datapoint is considered as outlier.
  */
 @ApplicationScoped
-public class MonthlyOutlierFilter extends Filter {
+public class MonthlyOutlierFilter extends FilterPredicate {
 
     /***
      * The main filter predicate function invoked by a Stream filter invocation.
@@ -34,7 +34,7 @@ public class MonthlyOutlierFilter extends Filter {
                 .filter(item -> !item.equals(priceRecord))
                 .collect(Collectors.averagingDouble(PriceRecord::getPrice));
 
-        return Math.abs(monthAverage - priceRecord.getPrice()) > threshold;
+        return Math.abs(monthAverage - priceRecord.getPrice()) < threshold;
     }
 
     private boolean neighborsFilter(PriceRecord referenceRecord, PriceRecord testedRecord) {
