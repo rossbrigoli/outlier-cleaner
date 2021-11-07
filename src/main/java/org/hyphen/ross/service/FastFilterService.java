@@ -2,30 +2,17 @@ package org.hyphen.ross.service;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.processors.FilterPredicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.enterprise.inject.Alternative;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * A simple filter service that utilizes a single filter predicate.
- *
+ * A faster version of SimpleFilterService with O(n) complexity. Use this service for bigger datasets.
  */
 @ApplicationScoped
-public class SimpleFilterService implements FilterService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(SimpleFilterService.class);
-
-    /**
-     * The predicate function to use in filtering records.
-     * To change the filter logic, replace this with another implementation of the Filter abstract class.
-     * You can do this by marking the unwanted implementation with @Alternative annotation
-     */
-    @Inject
-    FilterPredicate filterPredicate;
+@Alternative
+public class FastFilterService implements FilterService{
 
     /**
      * Used as the allowable distance from the baseline price before a record is considered as outlier.
@@ -40,20 +27,18 @@ public class SimpleFilterService implements FilterService {
     Integer range = 15;
 
     /**
-     * Applies a filter to the given collection of PriceRecords using a filter predicate.
+     * Applies a filter to the given collection of PriceRecords using a sliding window algorithm.
      * If the predicate function returns false for a given record, that record will be removed from the output collection.
      * @param sourceCollection the List of Price Record to be filtered
      * @return the filtered out version of the original List of PriceRecord
      */
     @Override
     public List<PriceRecord> apply(List<PriceRecord> sourceCollection) {
-        LOGGER.info("Applying filter to {} records...", sourceCollection.size());
-
-        filterPredicate.setThreshold(threshold);
-        filterPredicate.setDataset(sourceCollection);
-        filterPredicate.setRange(range);
-
-        return sourceCollection.stream().filter(filterPredicate).collect(Collectors.toList());
+        //TODO: 1. On first call, create a map of date range window and their corresponding price records
+        //TODO: 2. Store this in a static variable so it can be used in the succeeding calls
+        //TODO: 3. Use this map to get the min and max price for that window excluding the current records being tested
+        //TODO: 4. If the price of the current record is above or below the threshold from the max price and min price of the window, then return false.
+        return sourceCollection;
     }
 
     @Override

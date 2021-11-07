@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface FilterService {
     List<PriceRecord> apply(List<PriceRecord> sourceCollection);
+    List<PriceRecord> apply(List<PriceRecord> sourceCollection, int range, double threshold);
 }

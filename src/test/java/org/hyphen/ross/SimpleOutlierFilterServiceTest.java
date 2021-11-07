@@ -4,7 +4,7 @@ import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.hyphen.ross.model.PriceRecord;
 import org.hyphen.ross.processors.FilterPredicate;
-import org.hyphen.ross.processors.MonthlyOutlierFilter;
+import org.hyphen.ross.processors.WindowOutlierFilter;
 import org.hyphen.ross.service.SimpleFilterService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -24,7 +24,9 @@ public class SimpleOutlierFilterServiceTest {
     @Inject
     SimpleFilterService filterService;
 
-    MonthlyOutlierFilter mockFilterPredicate = Mockito.mock(MonthlyOutlierFilter.class);
+    //Replace the Mock filter type according to the CDI default instance of FilterPredicate
+    WindowOutlierFilter mockFilterPredicate = Mockito.mock(WindowOutlierFilter.class);
+
     private final static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
     private final static LinkedList<PriceRecord> sourceRecords = new LinkedList<>();
 

@@ -69,12 +69,7 @@ public class Main implements QuarkusApplication {
             return getInputFilePath(args);
         }
         var outputPath = args[1];
-//        var containingDir = Paths.get(outputPath).getParent();
-//        var outputDirExist = Files.exists(containingDir);
-//
-//        if (!outputDirExist) {
-//            throw new IllegalArgumentException(String.format("Destination directory does not exist: %s", outputPath));
-//        }
+
         return outputPath;
     }
 

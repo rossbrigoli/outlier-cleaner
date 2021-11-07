@@ -2,7 +2,7 @@ package org.hyphen.ross;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.processors.MonthlyOutlierFilter;
+import org.hyphen.ross.processors.WindowOutlierFilter;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
 
 @QuarkusTest
-public class MonthlyOutlierFilterPredicateTest {
+public class WindowOutlierFilterPredicateTest {
 
-    MonthlyOutlierFilter filterPredicate = new MonthlyOutlierFilter();
+    WindowOutlierFilter filterPredicate = new WindowOutlierFilter();
 
     private final static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
     private final static LinkedList<PriceRecord> sourceRecords = new LinkedList<>();
@@ -34,6 +34,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 200.00);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
         //False is outlier, True is not
         Assertions.assertFalse(actual);
@@ -45,7 +46,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 151.00);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertTrue(actual);
@@ -54,10 +55,10 @@ public class MonthlyOutlierFilterPredicateTest {
     @Test
     @DisplayName("When the price is a whole number above the upper threshold, then it should be filtered out")
     public void testOutlierJustOutsideTheThreshold() {
-        var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 152.00);
+        var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 153.00);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertFalse(actual);
@@ -69,7 +70,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 151.999999999);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertTrue(actual);
@@ -81,6 +82,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 10.1);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
         //False is outlier, True is not
         Assertions.assertFalse(actual);
@@ -92,7 +94,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 52.0);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertFalse(actual);
@@ -104,7 +106,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 51.00);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertFalse(actual);
@@ -116,7 +118,7 @@ public class MonthlyOutlierFilterPredicateTest {
         var priceRecord = new PriceRecord(DateTime.parse("04/01/2020", dateTimeFormatter).toLocalDate(), 151.000001);
         filterPredicate.setDataset(sourceRecords);
         filterPredicate.setThreshold(50.0);
-
+        filterPredicate.setRange(2);
         var actual = filterPredicate.test(priceRecord);
 
         Assertions.assertTrue(actual);

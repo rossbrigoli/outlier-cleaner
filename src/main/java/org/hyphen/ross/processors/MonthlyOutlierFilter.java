@@ -1,9 +1,6 @@
 package org.hyphen.ross.processors;
 
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.service.SimpleFilterService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
@@ -13,10 +10,13 @@ import java.util.stream.Collectors;
  * A basic price outlier detector using fix time range of a Month and a threshold.
  * The prices that belong to the same month are considered as neighbors. The average price of the neighbors is used as the baseline.
  * If the price of a data point is above or below the given threshold from the baseline, then the datapoint is considered as outlier.
+ *
+ * Complexity is O(n^2)
  */
 @ApplicationScoped
+@Alternative
 public class MonthlyOutlierFilter extends FilterPredicate {
-    private final static Logger LOGGER = LoggerFactory.getLogger(FilterPredicate.class);
+
 
     /***
      * The main filter predicate function invoked by a Stream filter invocation.

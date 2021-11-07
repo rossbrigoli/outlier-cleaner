@@ -3,7 +3,7 @@ package org.hyphen.ross.model;
 import org.joda.time.LocalDate;
 
 /**
- * Represents a Price for a given Date
+ * Represents a Price at a given Date
  */
 public class PriceRecord {
     private LocalDate date;

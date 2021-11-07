@@ -1,22 +1,19 @@
 package org.hyphen.ross.processors;
 
 import org.hyphen.ross.model.PriceRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
 import java.util.stream.Collectors;
 
 /***
  * A basic price outlier detector using sliding window average.
  * The prices that are within the given range belong to the same window. The average price of the window is used as the baseline.
  * If the price of a data point is above or below the given threshold from the baseline, then the datapoint is considered as outlier.
+ *
+ * Complexity is O(n^2)
  */
 @ApplicationScoped
-@Alternative
 public class WindowOutlierFilter extends FilterPredicate {
-    private final static Logger LOGGER = LoggerFactory.getLogger(FilterPredicate.class);
     /***
      * The main filter predicate function invoked by a Stream filter invocation.
      *
@@ -33,7 +30,7 @@ public class WindowOutlierFilter extends FilterPredicate {
     public boolean test(PriceRecord priceRecord) {
         var monthAverage = dataset.stream()
                 //Only include records that are within the range
-                .filter(item -> neighborFilter(priceRecord, item))
+                .filter(item -> windowFilter(priceRecord, item))
                 //Exclude the record that is being tested
                 .filter(item -> !item.equals(priceRecord))
                 .collect(Collectors.averagingDouble(PriceRecord::getPrice));
@@ -47,9 +44,9 @@ public class WindowOutlierFilter extends FilterPredicate {
         return isTypicalPrice;
     }
 
-    private boolean neighborFilter(PriceRecord referenceRecord, PriceRecord testedRecord) {
+    private boolean windowFilter(PriceRecord referenceRecord, PriceRecord testedRecord) {
         //if range is zero, consider all records as neighbors
-        if (range == 0) {
+        if (range.equals(0)) {
             return true;
         }
 
