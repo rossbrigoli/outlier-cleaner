@@ -59,7 +59,7 @@ public class Main implements QuarkusApplication {
         var inputPath = args[0];
 
         if (!Files.exists(Paths.get(inputPath))) {
-            throw new IllegalArgumentException(String.format("Source file does not exist: {}", inputPath));
+            throw new IllegalArgumentException(String.format("Source file does not exist: %s", inputPath));
         }
         return inputPath;
     }
@@ -69,11 +69,12 @@ public class Main implements QuarkusApplication {
             return getInputFilePath(args);
         }
         var outputPath = args[1];
-
-        var outputDirExist = Files.exists(Paths.get(outputPath).getParent());
-        if (!outputDirExist) {
-            throw new IllegalArgumentException(String.format("Destination directory does not exist: {}", outputPath));
-        }
+//        var containingDir = Paths.get(outputPath).getParent();
+//        var outputDirExist = Files.exists(containingDir);
+//
+//        if (!outputDirExist) {
+//            throw new IllegalArgumentException(String.format("Destination directory does not exist: %s", outputPath));
+//        }
         return outputPath;
     }
 

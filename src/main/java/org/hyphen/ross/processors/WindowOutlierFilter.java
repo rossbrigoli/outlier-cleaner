@@ -1,7 +1,6 @@
 package org.hyphen.ross.processors;
 
 import org.hyphen.ross.model.PriceRecord;
-import org.hyphen.ross.service.SimpleFilterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,21 +9,21 @@ import javax.enterprise.inject.Alternative;
 import java.util.stream.Collectors;
 
 /***
- * A basic price outlier detector using fix time range of a Month and a threshold.
- * The prices that belong to the same month are considered as neighbors. The average price of the neighbors is used as the baseline.
+ * A basic price outlier detector using sliding window average.
+ * The prices that are within the given range belong to the same window. The average price of the window is used as the baseline.
  * If the price of a data point is above or below the given threshold from the baseline, then the datapoint is considered as outlier.
  */
 @ApplicationScoped
-public class MonthlyOutlierFilter extends FilterPredicate {
+@Alternative
+public class WindowOutlierFilter extends FilterPredicate {
     private final static Logger LOGGER = LoggerFactory.getLogger(FilterPredicate.class);
-
     /***
      * The main filter predicate function invoked by a Stream filter invocation.
      *
      * A price record is considered an outlier if and only if the price is above or below the threshold from the calculated baseline.
-     * The baseline is calculated as the average price of all price records of the same Month of Year.
+     * The baseline is calculated as the average price of all price record in the window.
      *
-     * For Example: If the average price of the month is 100 and the threshold is 5, then all the price records of the same month
+     * For Example: If the average price of the window is 100 and the threshold is 5, then all the price records of the same month
      * with a prices greater than 105 and less than 95 are considered outliers.
      *
      * @param priceRecord the record to be tested
@@ -33,8 +32,8 @@ public class MonthlyOutlierFilter extends FilterPredicate {
     @Override
     public boolean test(PriceRecord priceRecord) {
         var monthAverage = dataset.stream()
-                //Only include records from the same year and month
-                .filter(item -> neighborsFilter(priceRecord, item))
+                //Only include records that are within the range
+                .filter(item -> neighborFilter(priceRecord, item))
                 //Exclude the record that is being tested
                 .filter(item -> !item.equals(priceRecord))
                 .collect(Collectors.averagingDouble(PriceRecord::getPrice));
@@ -48,9 +47,14 @@ public class MonthlyOutlierFilter extends FilterPredicate {
         return isTypicalPrice;
     }
 
-    private boolean neighborsFilter(PriceRecord referenceRecord, PriceRecord testedRecord) {
-        var refDate = referenceRecord.getDate();
-        var testedDate = testedRecord.getDate();
-        return testedDate.getYear() == refDate.getYear() && testedDate.getMonthOfYear() == refDate.getMonthOfYear();
+    private boolean neighborFilter(PriceRecord referenceRecord, PriceRecord testedRecord) {
+        //if range is zero, consider all records as neighbors
+        if (range == 0) {
+            return true;
+        }
+
+        var referenceDate = referenceRecord.getDate();
+        return testedRecord.getDate().isBefore(referenceDate.plusDays(range)) &&
+                testedRecord.getDate().isAfter(referenceDate.minusDays(range));
     }
 }

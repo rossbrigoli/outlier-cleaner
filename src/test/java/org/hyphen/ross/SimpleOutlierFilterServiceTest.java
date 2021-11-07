@@ -59,7 +59,7 @@ public class SimpleOutlierFilterServiceTest {
     @DisplayName("When the filter predicate conditionally returns false, then some records should be filtered out")
     public void testFilterServiceSelectivePredicate() {
 
-        //Mock the filter predicate to filter our record with price == 103.00
+        //Mock the filter predicate to filter out records with price == 103.00
         Mockito.when(mockFilterPredicate.test(Mockito.any(PriceRecord.class))).thenAnswer((Answer<Boolean>) invocationOnMock -> {
             return !invocationOnMock.getArgument(0,PriceRecord.class).getPrice().equals(103.00);
         });

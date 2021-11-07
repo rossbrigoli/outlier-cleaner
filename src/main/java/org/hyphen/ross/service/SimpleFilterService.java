@@ -31,10 +31,10 @@ public class SimpleFilterService implements FilterService {
      * Used as the allowable distance from the baseline price before a record is considered as outlier.
      */
     @ConfigProperty(name = "filter.threshold")
-    Double filterThreshold = 5.0;
+    Double threshold = 5.0;
 
-    @ConfigProperty(name = "filter.dayrange")
-    Integer neighborDaysRange = 15;
+    @ConfigProperty(name = "filter.range")
+    Integer range = 15;
 
     /**
      * Applies a filter to the given collection of PriceRecords using a filter predicate.
@@ -45,9 +45,9 @@ public class SimpleFilterService implements FilterService {
     public List<PriceRecord> apply(List<PriceRecord> sourceCollection) {
         LOGGER.info("Applying filter to {} records...", sourceCollection.size());
 
-        filterPredicate.setThreshold(filterThreshold);
+        filterPredicate.setThreshold(threshold);
         filterPredicate.setDataset(sourceCollection);
-        filterPredicate.setNeighborDaysRange(neighborDaysRange);
+        filterPredicate.setRange(range);
 
         return sourceCollection.stream().filter(filterPredicate).collect(Collectors.toList());
     }

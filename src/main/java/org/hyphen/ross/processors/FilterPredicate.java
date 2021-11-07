@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public abstract class FilterPredicate implements Predicate<PriceRecord> {
     protected Double threshold;
     protected List<PriceRecord> dataset;
-    protected Integer neighborDaysRange;
+    protected Integer range;
 
     public void setThreshold(Double threshold) {
         this.threshold = threshold;
@@ -23,7 +23,7 @@ public abstract class FilterPredicate implements Predicate<PriceRecord> {
         this.dataset = dataset;
     }
 
-    public void setNeighborDaysRange(Integer neighborDaysRange) {
-        this.neighborDaysRange = neighborDaysRange;
+    public void setRange(Integer range) {
+        this.range = range;
     }
 }
